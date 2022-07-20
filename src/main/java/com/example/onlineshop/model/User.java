@@ -35,12 +35,15 @@ public class User implements UserDetails {
     @Pattern(regexp = "[a-zA-Z]{3,10}")
     private String lastname;
 
-    @Pattern(regexp = "^09\\d{9}")
+    @Email
     @Column(nullable = false, unique = true)
-    private String phoneNumber;
+    private String email;
 
     @NotBlank
     private String city;
+
+    @NotBlank
+    private String address;
 
     @Min(8)
     @Max(100)
@@ -56,7 +59,7 @@ public class User implements UserDetails {
     @PrimaryKeyJoinColumn
     private Cart cart;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "USER_ROLE", schema = "shop",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")

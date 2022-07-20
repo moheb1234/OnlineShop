@@ -34,9 +34,9 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("user/{phoneNumber}")
-    public ResponseEntity<User> findByPhoneNumber(@PathVariable String phoneNumber) {
-        return ResponseEntity.ok(userService.findByPhoneNumber(phoneNumber));
+    @GetMapping("user/")
+    public ResponseEntity<User> findByPhoneNumber(@RequestParam String email) {
+        return ResponseEntity.ok(userService.findByEmail(email));
     }
 
     @GetMapping("user/cart")

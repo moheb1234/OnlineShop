@@ -65,8 +65,8 @@ public class UserService implements UserDetailsService {
     }
 
     @SneakyThrows
-    public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(InstanceNotFoundException::new);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(InstanceNotFoundException::new);
     }
 
     public List<User> findAll() {
