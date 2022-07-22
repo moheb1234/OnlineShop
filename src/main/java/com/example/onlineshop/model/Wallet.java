@@ -22,7 +22,7 @@ public class Wallet {
     @Pattern(regexp = "\\d{10}")
     private String walletNumber;
 
-    @Min(1)
+    @Min(0)
     @NotNull
     private int balance;
 
@@ -50,7 +50,7 @@ public class Wallet {
     }
 
     public String generationWalletNumber() {
-        int random = 0;
+        int random;
         StringBuilder number = new StringBuilder();
         for (int i = 0; i < 10; i++) {
             random = (int) (Math.random() * (10));

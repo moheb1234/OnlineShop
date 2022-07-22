@@ -16,11 +16,6 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    @SneakyThrows
-    public Transaction findById(long id){
-        return transactionRepository.findById(id).orElseThrow(InstanceNotFoundException::new);
-    }
-
     public List<Transaction> findAll(){
         return transactionRepository.findAll();
     }

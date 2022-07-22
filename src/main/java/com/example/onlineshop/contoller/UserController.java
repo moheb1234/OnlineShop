@@ -24,11 +24,6 @@ public class UserController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
-    @GetMapping("hello")
-    public String hello(){
-        return "hello";
-    }
-
     @GetMapping("user/all")
     public ResponseEntity<List<User>> findAll() {
         return ResponseEntity.ok(userService.findAll());
@@ -44,14 +39,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getCart(user));
     }
 
-    @GetMapping("user/cart/total-price")
-    public ResponseEntity<Integer> totalPriceOfCart(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(userService.totalPriceOfCart(user));
-    }
-
     @PostMapping("signup")
     public ResponseEntity<User> signup(@RequestBody User user) {
         return new ResponseEntity<>(userService.signup(user), HttpStatus.CREATED);
+    }
+
+    @GetMapping("user/verifying")
+    public ResponseEntity<String> verifyingCode(@RequestParam String verifyingCode){
+        return ResponseEntity.ok(userService.verifyingCode(verifyingCode));
+    }
+
+    @GetMapping("user/forget-password")
+    public ResponseEntity<String> getForgottenPassword(@RequestParam String email){
+        return ResponseEntity.ok(userService.sendForgottenPassword(email));
     }
 
     @PostMapping("signing")
@@ -62,6 +62,11 @@ public class UserController {
     @PostMapping("user/add-product/{productId}")
     public ResponseEntity<Product> addProductToCart(@AuthenticationPrincipal User user, @PathVariable long productId) {
         return ResponseEntity.ok(userService.addToCart(user, productId));
+    }
+
+    @PutMapping("user/deposit")
+    public ResponseEntity<Integer> deposit(@AuthenticationPrincipal User user, @RequestParam int amount){
+        return ResponseEntity.ok(userService.deposit(user,amount));
     }
 
     @DeleteMapping("user/remove-product/{productId}")

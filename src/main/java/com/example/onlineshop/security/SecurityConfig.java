@@ -79,6 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public String[] permitAllAuthorizeHttp() {
-        return new String[]{"/products/**", "/signing", "/signup", "/home/**"};
+        return new String[]{"/products/**", "/signing", "/signup", "/home/**","/user/verifying","/user/forget-password"};
     }
 }

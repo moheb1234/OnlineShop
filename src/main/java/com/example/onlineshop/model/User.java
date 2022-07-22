@@ -49,6 +49,7 @@ public class User implements UserDetails {
     @Max(100)
     private int age;
 
+    private String verifyingCode;
     @NotNull
     private boolean enabled;
 
@@ -76,6 +77,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

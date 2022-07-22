@@ -1,11 +1,10 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Wallet;
 import com.example.onlineshop.repository.WalletRepository;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import javax.management.InstanceNotFoundException;
 import java.util.List;
 
 @Service
@@ -16,10 +15,6 @@ public class WalletService {
         this.walletRepository = walletRepository;
     }
 
-    @SneakyThrows
-    public Wallet findById(long id) {
-        return walletRepository.findById(id).orElseThrow(InstanceNotFoundException::new);
-    }
 
     public List<Wallet> findAll() {
         return walletRepository.findAll();
@@ -34,12 +29,12 @@ public class WalletService {
             save(wallet);
             return wallet.getBalance();
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
     }
 
     public void withdraw(int amount, Wallet wallet) {
         if (wallet.withdraw(amount))
             save(wallet);
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
     }
 }

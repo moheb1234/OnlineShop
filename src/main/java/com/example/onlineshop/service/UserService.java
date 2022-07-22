@@ -7,18 +7,23 @@ import com.example.onlineshop.security.jwt.JwtUtils;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import net.bytebuddy.utility.RandomString;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.management.InstanceNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
 
 @Service
 @AllArgsConstructor
@@ -32,32 +37,31 @@ public class UserService implements UserDetailsService {
     private final WalletService walletService;
     private final TransactionService transactionService;
 
+    @Resource
+    private final JavaMailSender javaMailSender;
+
 
     @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(InstanceNotFoundException::new);
+        return userRepository.findByUsername(username).orElseThrow(() -> new InstanceNotFoundException(USER_NOT_FOUND));
     }
 
     public LoginResponse signing(String username, String password, AuthenticationManager authenticationManager) {
         UserDetails userDetails = loadUserByUsername(username);
-        if (!userDetails.getPassword().equals(password)) {
-            throw new BadCredentialsException("");
-        }
-
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         String token = jwtUtils.generateJwtToken(userDetails);
-        return new LoginResponse(token);
+        return new LoginResponse(token, userDetails.getAuthorities());
     }
 
     @SneakyThrows
     public User findById(long id) {
-        return userRepository.findById(id).orElseThrow(InstanceNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException(USER_NOT_FOUND));
     }
 
     @SneakyThrows
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(InstanceNotFoundException::new);
+        return userRepository.findByEmail(email).orElseThrow(() -> new InstanceNotFoundException(USER_NOT_FOUND));
     }
 
     public List<User> findAll() {
@@ -73,6 +77,8 @@ public class UserService implements UserDetailsService {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
+        user.setVerifyingCode(RandomString.make(20));
+        user.setEnabled(false);
         Cart cart = new Cart();
         Wallet wallet = walletService.save(new Wallet(0));
         Cart savedCart = cartService.save(cart);
@@ -83,7 +89,40 @@ public class UserService implements UserDetailsService {
         wallet.setUser(user);
         cartService.save(savedCart);
         walletService.save(wallet);
+        sendVerifyingEmil(user);
         return savedUser;
+    }
+
+    public void sendVerifyingEmil(User user) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo("mohebmoallem1376@gmail.com");
+        msg.setSubject("verifying emile");
+        msg.setText("verifying code: \n" + user.getVerifyingCode());
+        javaMailSender.send(msg);
+    }
+
+    public String verifyingCode(String verifyingCode) {
+        User user = userRepository.findByVerifyingCode(verifyingCode);
+        if (user == null || user.isEnabled()) {
+            throw new IllegalArgumentException(CODE_NOT_VALID);
+        }
+        user.setVerifyingCode(null);
+        user.setEnabled(true);
+        save(user);
+        return "Verification was successful";
+    }
+
+    public String sendForgottenPassword(String email) {
+        User user = findByEmail(email);
+        if (user.isEnabled()) {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(email);
+            msg.setSubject("Forget Password");
+            msg.setText("Hi  " + user.getUsername() + "\n\n your password is: \n" + user.getPassword());
+            javaMailSender.send(msg);
+            return "We Send Your password in " + email;
+        }
+        throw new IllegalArgumentException(USER_NOT_Enables);
     }
 
     public User delete(long id) {
@@ -100,10 +139,6 @@ public class UserService implements UserDetailsService {
         return user.getTransactions().stream().toList();
     }
 
-    public int totalPriceOfCart(User user) {
-        return user.getCart().totalPrice();
-    }
-
     public Product addToCart(User user, long productId) {
         return productService.addToCart(user.getCart(), productId);
     }
@@ -117,7 +152,7 @@ public class UserService implements UserDetailsService {
         if (user.getRoles().add(role)) {
             return role;
         }
-        throw new DuplicateRequestException();
+        throw new DuplicateRequestException(DUPLICATE_ROLE);
     }
 
     public Integer deposit(User user, int amount) {
@@ -127,7 +162,9 @@ public class UserService implements UserDetailsService {
     public Transaction order(User user, String explains) {
         int totalPrice = user.getCart().totalPrice();
         if (totalPrice == 0)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(EMPTY_CART);
+        if (totalPrice>user.getWallet().getBalance())
+            throw new IllegalArgumentException(NOT_ENOUGH_BALANCE);
         walletService.withdraw(totalPrice, user.getWallet());
         cartService.clear(user.getCart());
         Transaction transaction = new Transaction(totalPrice, explains);
