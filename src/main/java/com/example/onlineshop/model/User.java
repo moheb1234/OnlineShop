@@ -49,15 +49,26 @@ public class User implements UserDetails {
     @Max(100)
     private int age;
 
+    @NotNull
+    private boolean enabled;
+
     @CreationTimestamp
     private Date createdAt;
 
     @UpdateTimestamp
     private Date lastModifiedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Cart cart;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
+    private Wallet wallet;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
+    private Set<Transaction> transactions = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(name = "USER_ROLE", schema = "shop",
@@ -65,7 +76,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
@@ -90,6 +100,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
