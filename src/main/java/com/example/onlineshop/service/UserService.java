@@ -7,6 +7,7 @@ import com.example.onlineshop.security.jwt.JwtUtils;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,6 +26,7 @@ import java.util.Set;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
@@ -163,7 +165,7 @@ public class UserService implements UserDetailsService {
         int totalPrice = user.getCart().totalPrice();
         if (totalPrice == 0)
             throw new IllegalArgumentException(EMPTY_CART);
-        if (totalPrice>user.getWallet().getBalance())
+        if (totalPrice > user.getWallet().getBalance())
             throw new IllegalArgumentException(NOT_ENOUGH_BALANCE);
         walletService.withdraw(totalPrice, user.getWallet());
         cartService.clear(user.getCart());

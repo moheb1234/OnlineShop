@@ -24,6 +24,11 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> IllegalArgumentExceptionHandler(IllegalArgumentException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(PSQLException.class)
     public ResponseEntity<Object> PSQLExceptionHandler(PSQLException e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);

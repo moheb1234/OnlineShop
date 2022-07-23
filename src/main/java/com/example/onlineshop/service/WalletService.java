@@ -35,6 +35,7 @@ public class WalletService {
     public void withdraw(int amount, Wallet wallet) {
         if (wallet.withdraw(amount))
             save(wallet);
-        throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
+        else
+            throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
     }
 }

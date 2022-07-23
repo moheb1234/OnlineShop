@@ -1,11 +1,8 @@
 package com.example.onlineshop.contoller;
 
+import com.example.onlineshop.model.*;
 import com.example.onlineshop.security.LoginResponse;
 import lombok.extern.slf4j.Slf4j;
-import com.example.onlineshop.model.Cart;
-import com.example.onlineshop.model.Product;
-import com.example.onlineshop.model.Role;
-import com.example.onlineshop.model.User;
 import com.example.onlineshop.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +64,11 @@ public class UserController {
     @PutMapping("user/deposit")
     public ResponseEntity<Integer> deposit(@AuthenticationPrincipal User user, @RequestParam int amount){
         return ResponseEntity.ok(userService.deposit(user,amount));
+    }
+
+    @PutMapping("user/order")
+    public ResponseEntity<Transaction> order(@AuthenticationPrincipal User user , @RequestParam String explains){
+        return ResponseEntity.ok(userService.order(user, explains));
     }
 
     @DeleteMapping("user/remove-product/{productId}")
