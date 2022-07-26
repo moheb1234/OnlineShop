@@ -162,13 +162,18 @@ public class UserService implements UserDetailsService {
     }
 
     public Transaction order(User user, String explains) {
-        int totalPrice = user.getCart().totalPrice();
+        Cart userCart = user.getCart();
+        List<Product> nonExist =  userCart.nonExistProducts();
+        if (nonExist.size()!=0)
+            throw new IllegalArgumentException(nonExist.get(0).getName()+"  Is Not Exist");
+        int totalPrice = userCart.totalPrice();
         if (totalPrice == 0)
             throw new IllegalArgumentException(EMPTY_CART);
         if (totalPrice > user.getWallet().getBalance())
             throw new IllegalArgumentException(NOT_ENOUGH_BALANCE);
+        productService.ReduceInventory(userCart.getProducts().keySet());
+        cartService.clear(userCart);
         walletService.withdraw(totalPrice, user.getWallet());
-        cartService.clear(user.getCart());
         Transaction transaction = new Transaction(totalPrice, explains);
         transaction.setUser(user);
         return transactionService.save(transaction);

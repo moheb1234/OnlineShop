@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.PRODUCT_NOT_FOUND;
 
@@ -59,6 +60,13 @@ public class ProductService {
         return price;
     }
 
+    public Integer increaseInventory(long id , int number){
+        Product product = findById(id);
+        product.setInventory(product.getInventory()+number);
+        save(product);
+        return product.getInventory();
+    }
+
     public Product delete(long id) {
         Product product = findById(id);
         productRepository.delete(product);
@@ -67,7 +75,7 @@ public class ProductService {
 
     public Product addToCart(Cart cart, long id) {
         Product product = findById(id);
-        cart.getProducts().add(product);
+        cart.addProduct(product);
         cartRepository.save(cart);
         return product;
     }
@@ -75,10 +83,17 @@ public class ProductService {
     @SneakyThrows
     public Product removeFromCart(Cart cart, long productId) {
         Product product = findById(productId);
-        if (cart.getProducts().remove(product)) {
+        if (cart.removeProduct(product)) {
             cartRepository.save(cart);
             return product;
         }
         throw new InstanceNotFoundException(PRODUCT_NOT_FOUND);
+    }
+
+    public void ReduceInventory(Set<Product> products){
+        for (Product product : products) {
+            product.setInventory(product.getInventory()-1);
+        }
+        productRepository.saveAll(products);
     }
 }

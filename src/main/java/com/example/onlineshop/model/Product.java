@@ -2,6 +2,7 @@ package com.example.onlineshop.model;
 
 import lombok.Data;
 import com.example.onlineshop.enums.ProductCategories;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -28,7 +29,12 @@ public class Product {
 
     @NotNull
     @NotBlank
+    @Column(unique = true)
     private String imageUrl;
+
+    @Min(0)
+    @ColumnDefault(value = "0")
+    private int inventory;
 
     @Enumerated(EnumType.STRING)
     private ProductCategories productCategories;

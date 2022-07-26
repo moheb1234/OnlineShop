@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -20,17 +19,39 @@ public class Cart {
     @JsonBackReference
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "CART_PRODUCT", schema = "shop",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "Product_id"))
-    private List<Product> products = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "CART_PRODUCT", schema = "shop",
+            joinColumns = @JoinColumn(name = "cart_id"))
+    @Column(name = "product_number")
+    @MapKeyJoinColumn(name = "product_id")
+    private Map<Product,Integer> products = new HashMap<>();
 
-    public int totalPrice(){
+    public int totalPrice() {
         int total = 0;
-        for (Product product : products) {
-            total+= product.getPrice();
+        for (Product product : products.keySet()) {
+            int number = products.get(product);
+            total += product.getPrice()*number;
         }
         return total;
+    }
+
+    public void addProduct(Product product){
+        if (products.containsKey(product)){
+            products.put(product,products.get(product)+1);
+            return;
+        }
+        products.put(product,1);
+    }
+
+    public boolean removeProduct(Product product){
+        if (products.containsKey(product)){
+            products.put(product,products.get(product)-1);
+            return true;
+        }
+        return false;
+    }
+
+    public List<Product> nonExistProducts() {
+        return products.keySet().stream().filter(product -> product.getInventory() == 0).toList();
     }
 }
