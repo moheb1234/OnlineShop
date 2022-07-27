@@ -15,6 +15,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
     @GetMapping("products/by-name{productName}")
     public ResponseEntity<List<Product>> findAllByName(@PathVariable String productName) {
         return ResponseEntity.ok(productService.findAllByName(productName));
@@ -51,7 +52,7 @@ public class ProductController {
     }
 
     @PutMapping("product/increase-inventory/{id}")
-    public ResponseEntity<Integer> increaseInventory(@RequestParam int number, @PathVariable long id){
+    public ResponseEntity<Integer> increaseInventory(@RequestParam int number, @PathVariable long id) {
         return ResponseEntity.ok(productService.increaseInventory(id, number));
     }
 
