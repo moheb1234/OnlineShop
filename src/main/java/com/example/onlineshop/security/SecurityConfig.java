@@ -75,10 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public String[] userAuthorizeHttp() {
-        return new String[]{"/user/cart/**", "/user/add-product/**", "user/remove-product/**", "/hello"};
+        return new String[]{"/user/cart/**", "/user/add-product/**", "user/remove-product/**"};
     }
 
     public String[] permitAllAuthorizeHttp() {
-        return new String[]{"/products/**", "/signing", "/signup","/user/verifying","/user/forget-password"};
+        return new String[]{"/products/**", "/signing", "/signup","/user/verifying","/user/forget-password","/hello"};
     }
 }

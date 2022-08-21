@@ -3,11 +3,13 @@ package com.example.onlineshop.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +31,9 @@ public class Wallet {
     @OneToOne
     @JsonBackReference
     private User user;
+
+    @UpdateTimestamp
+    private Date lastModifiedAt;
 
     public Wallet(int balance) {
         this.balance = balance;

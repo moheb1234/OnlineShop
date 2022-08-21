@@ -1,8 +1,8 @@
 package com.example.onlineshop.contoller;
 
-import com.example.onlineshop.model.*;
+import com.example.onlineshop.model.Cart;
+import com.example.onlineshop.model.User;
 import com.example.onlineshop.security.LoginResponse;
-import lombok.extern.slf4j.Slf4j;
 import com.example.onlineshop.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,7 @@ public class UserController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
+
     @GetMapping("user/all")
     public ResponseEntity<List<User>> findAll() {
         return ResponseEntity.ok(userService.findAll());
@@ -42,43 +43,13 @@ public class UserController {
     }
 
     @GetMapping("user/verifying")
-    public ResponseEntity<String> verifyingCode(@RequestParam String verifyingCode){
+    public ResponseEntity<String> verifyingCode(@RequestParam String verifyingCode) {
         return ResponseEntity.ok(userService.verifyingCode(verifyingCode));
-    }
-
-    @GetMapping("user/forget-password")
-    public ResponseEntity<String> getForgottenPassword(@RequestParam String email){
-        return ResponseEntity.ok(userService.sendForgottenPassword(email));
     }
 
     @PostMapping("signing")
     public ResponseEntity<LoginResponse> signing(@RequestParam String username, @RequestParam String password) {
-        return ResponseEntity.ok(userService.signing(username, password,authenticationManager));
-    }
-
-    @PostMapping("user/add-product/{productId}")
-    public ResponseEntity<Product> addProductToCart(@AuthenticationPrincipal User user, @PathVariable long productId) {
-        return ResponseEntity.ok(userService.addToCart(user, productId));
-    }
-
-    @PutMapping("user/deposit")
-    public ResponseEntity<Integer> deposit(@AuthenticationPrincipal User user, @RequestParam int amount){
-        return ResponseEntity.ok(userService.deposit(user,amount));
-    }
-
-    @PutMapping("user/order")
-    public ResponseEntity<Transaction> order(@AuthenticationPrincipal User user , @RequestParam String explains){
-        return ResponseEntity.ok(userService.order(user, explains));
-    }
-
-    @DeleteMapping("user/remove-product/{productId}")
-    public ResponseEntity<Product> removeProductFromCart(@AuthenticationPrincipal User user, @PathVariable long productId) {
-        return ResponseEntity.ok(userService.removeFromCart(user, productId));
-    }
-
-    @PostMapping("user/add-role/{roleId}")
-    public ResponseEntity<Role> addRole(@AuthenticationPrincipal User user, @PathVariable long roleId) {
-        return ResponseEntity.ok(userService.addRole(user, roleId));
+        return ResponseEntity.ok(userService.signing(username, password, authenticationManager));
     }
 
     @DeleteMapping("user/delete/{id}")

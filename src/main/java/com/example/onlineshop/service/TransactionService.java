@@ -2,10 +2,8 @@ package com.example.onlineshop.service;
 
 import com.example.onlineshop.model.Transaction;
 import com.example.onlineshop.repository.TransactionRepository;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import javax.management.InstanceNotFoundException;
 import java.util.List;
 
 @Service
@@ -16,11 +14,11 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public List<Transaction> findAll(){
+    public List<Transaction> findAll() {
         return transactionRepository.findAll();
     }
 
-    public Transaction save(Transaction transaction){
+    public Transaction save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 }

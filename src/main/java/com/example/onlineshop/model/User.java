@@ -1,6 +1,7 @@
 package com.example.onlineshop.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "USER", schema = "shop")
 public class User implements UserDetails {
     @Id
@@ -59,15 +61,19 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private Date lastModifiedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Cart cart;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Wallet wallet;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
+    private Favorite favorite;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Set<Transaction> transactions = new HashSet<>();
 
@@ -83,6 +89,19 @@ public class User implements UserDetails {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toString())));
         return grantedAuthorities;
+    }
+
+    public User(String username, String password, String firstname, String lastname, String email, String city, String address, int age, String verifyingCode, boolean enabled) {
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.address = address;
+        this.age = age;
+        this.verifyingCode = verifyingCode;
+        this.enabled = enabled;
     }
 
     @Override

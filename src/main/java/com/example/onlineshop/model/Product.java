@@ -1,7 +1,7 @@
 package com.example.onlineshop.model;
 
-import lombok.Data;
 import com.example.onlineshop.enums.ProductCategories;
+import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -44,5 +44,4 @@ public class Product {
 
     @UpdateTimestamp
     private Date lastModifiedAt;
-
 }
