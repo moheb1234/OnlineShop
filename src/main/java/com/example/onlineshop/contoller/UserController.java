@@ -5,11 +5,13 @@ import com.example.onlineshop.model.User;
 import com.example.onlineshop.security.LoginResponse;
 import com.example.onlineshop.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.List;
 
 @RestController
@@ -37,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getCart(user));
     }
 
-    @PostMapping("signup")
+    @PostMapping(value = "signup" ,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> signup(@RequestBody User user) {
         return new ResponseEntity<>(userService.signup(user), HttpStatus.CREATED);
     }

@@ -43,6 +43,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public Product create(Product product) {
+        product.setInventory(1);
+        return save(product);
+    }
     public Product save(Product product) {
         return productRepository.save(product);
     }

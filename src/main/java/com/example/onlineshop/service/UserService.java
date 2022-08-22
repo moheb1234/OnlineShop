@@ -75,19 +75,12 @@ public class UserService implements UserDetailsService {
         int verifyingCode = (int) ((Math.random() * 900000) + 100000);
         user.setVerifyingCode(verifyingCode + "");
         user.setEnabled(false);
-        Cart cart = new Cart();
-        Wallet wallet = walletService.save(new Wallet(0));
-        Cart savedCart = cartService.save(cart);
-        user.setCart(savedCart);
-        user.setWallet(wallet);
-        User savedUser = save(user);
-        cart.setUser(user);
-        wallet.setUser(user);
-        cartService.save(savedCart);
-        walletService.save(wallet);
+        user.getCart().setUser(user);
+        user.getFavorite().setUser(user);
+        user.getWallet().setUser(user);
         emailService.setUserService(this);
         emailService.sendVerifyingEmil(user);
-        return savedUser;
+        return userRepository.saveAndFlush(user);
     }
 
     public String verifyingCode(String verifyingCode) {

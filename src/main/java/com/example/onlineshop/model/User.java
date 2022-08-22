@@ -1,7 +1,8 @@
 package com.example.onlineshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@NoArgsConstructor
 @Table(name = "USER", schema = "shop")
 public class User implements UserDetails {
     @Id
@@ -61,17 +61,21 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private Date lastModifiedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
-    private Cart cart;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
-    private Wallet wallet;
+    private Cart cart = new Cart();
+
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
-    private Favorite favorite;
+    private Wallet wallet = new Wallet(0);
+
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn
+    private Favorite favorite = new Favorite();
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
@@ -84,11 +88,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toString())));
-        return grantedAuthorities;
+    public User() {
     }
 
     public User(String username, String password, String firstname, String lastname, String email, String city, String address, int age, String verifyingCode, boolean enabled) {
@@ -102,6 +102,13 @@ public class User implements UserDetails {
         this.age = age;
         this.verifyingCode = verifyingCode;
         this.enabled = enabled;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toString())));
+        return grantedAuthorities;
     }
 
     @Override

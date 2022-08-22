@@ -5,10 +5,15 @@ import com.example.onlineshop.model.Role;
 import com.example.onlineshop.model.User;
 import com.example.onlineshop.repository.RoleRepository;
 import com.example.onlineshop.repository.UserRepository;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.converter.protobuf.ProtobufJsonFormatHttpMessageConverter;
 
 import java.util.HashSet;
 import java.util.Set;
