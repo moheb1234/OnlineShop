@@ -1,6 +1,7 @@
 package com.example.onlineshop.service;
 
 import com.example.onlineshop.enums.RoleName;
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Role;
 import com.example.onlineshop.repository.RoleRepository;
 import lombok.SneakyThrows;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceNotFoundException;
 import java.util.List;
 
-import static com.example.onlineshop.ex_handler.ExceptionMessage.ROLE_NOTFOUND;
+import static com.example.onlineshop.ex_handler.ExceptionMessage.roleNotFound;
 
 @Service
 public class RoleService {
@@ -21,24 +22,20 @@ public class RoleService {
 
     @SneakyThrows
     public Role findByName(String roleName) {
-        return roleRepository.findByName(RoleName.valueOf(roleName.toUpperCase())).orElseThrow(() -> new InstanceNotFoundException(ROLE_NOTFOUND));
+        return roleRepository.findByName(RoleName.valueOf(roleName.toUpperCase()))
+                .orElseThrow(() -> new InstanceNotFoundException(roleNotFound(roleName)));
     }
 
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
 
-    @SneakyThrows
-    public Role findById(long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException(ROLE_NOTFOUND));
-    }
-
     public Role save(Role role) {
         return roleRepository.save(role);
     }
 
-    public Role delete(long id) {
-        Role role = findById(id);
+    public Role delete(String roleName) {
+        Role role = findByName(roleName);
         roleRepository.delete(role);
         return role;
     }

@@ -29,13 +29,13 @@ public class WalletService {
             save(wallet);
             return wallet.getBalance();
         }
-        throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
+        throw new IllegalArgumentException(ExceptionMessage.notValidAmount(amount));
     }
 
     public void withdraw(int amount, Wallet wallet) {
         if (wallet.withdraw(amount))
             save(wallet);
         else
-            throw new IllegalArgumentException(ExceptionMessage.AMOUNT_IS_NOT_VALID);
+            throw new IllegalArgumentException(ExceptionMessage.notValidAmount(amount));
     }
 }

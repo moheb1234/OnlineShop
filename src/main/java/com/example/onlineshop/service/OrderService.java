@@ -1,5 +1,6 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class OrderService {
         Cart userCart = user.getCart();
         List<Product> nonExistProducts = userCart.nonExistProducts();
         if (nonExistProducts.size() != 0)
-            throw new IllegalArgumentException(nonExistProducts.get(0).getName() + "  Is Not Exist");
+            throw new IllegalArgumentException(ExceptionMessage.productNotFound(nonExistProducts.get(0).getId()));
         int totalPrice = userCart.totalPrice();
         if (totalPrice == 0)
             throw new IllegalArgumentException(EMPTY_CART);

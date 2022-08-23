@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceNotFoundException;
 import java.util.List;
 
-import static com.example.onlineshop.ex_handler.ExceptionMessage.PRODUCT_NOT_FOUND;
+import static com.example.onlineshop.ex_handler.ExceptionMessage.productNotFound;
 
 @Slf4j
 @Service
@@ -57,6 +57,6 @@ public class CartService {
         if (cart.removeProduct(product)) {
             return save(cart);
         }
-        throw new InstanceNotFoundException(PRODUCT_NOT_FOUND);
+        throw new InstanceNotFoundException(productNotFound(productID));
     }
 }

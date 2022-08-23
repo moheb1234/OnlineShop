@@ -11,7 +11,7 @@ import javax.management.InstanceNotFoundException;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.onlineshop.ex_handler.ExceptionMessage.PRODUCT_NOT_FOUND;
+import static com.example.onlineshop.ex_handler.ExceptionMessage.productNotFound;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class ProductService {
 
     @SneakyThrows
     public Product findById(long id) {
-        return productRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException(PRODUCT_NOT_FOUND));
+        return productRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException(productNotFound(id)));
     }
 
     public List<Product> findAllByName(String productName) {

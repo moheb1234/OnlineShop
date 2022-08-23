@@ -1,14 +1,13 @@
 package com.example.onlineshop.service;
 
 import com.example.onlineshop.model.User;
-import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-import static com.example.onlineshop.ex_handler.ExceptionMessage.USER_NOT_Enables;
+import static com.example.onlineshop.ex_handler.ExceptionMessage.USER_NOT_ENABLES;
 
 @Service
 public class EmailService {
@@ -40,6 +39,6 @@ public class EmailService {
             javaMailSender.send(msg);
             return "We Send Your password in " + email;
         }
-        throw new IllegalArgumentException(USER_NOT_Enables);
+        throw new IllegalArgumentException(USER_NOT_ENABLES);
     }
 }
