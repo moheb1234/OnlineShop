@@ -30,10 +30,9 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+
     private final CartService cartService;
     private final JwtUtils jwtUtils;
-    private final WalletService walletService;
-
     private final EmailService emailService;
 
     @SneakyThrows
@@ -96,6 +95,7 @@ public class UserService implements UserDetailsService {
 
     public User delete(long id) {
         User user = findById(id);
+        cartService.delete(user.getCart());
         userRepository.delete(user);
         return user;
     }

@@ -2,15 +2,16 @@ package com.example.onlineshop.service;
 
 import com.example.onlineshop.model.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.EMPTY_CART;
 import static com.example.onlineshop.ex_handler.ExceptionMessage.NOT_ENOUGH_BALANCE;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OrderService {
@@ -31,11 +32,13 @@ public class OrderService {
             throw new IllegalArgumentException(EMPTY_CART);
         if (totalPrice > user.getWallet().getBalance())
             throw new IllegalArgumentException(NOT_ENOUGH_BALANCE);
-        productService.ReduceInventory(userCart.getProducts().stream().map(ProductItem::getProduct).collect(Collectors.toCollection(LinkedHashSet::new)));
+        productService.ReduceInventory(userCart.getProductItems().stream().map(ProductItem::getProduct).collect(Collectors.toCollection(LinkedHashSet::new)));
+        Set<ProductItem> boughtProduct = new HashSet<>(userCart.getProductItems());
         cartService.clear(userCart);
         walletService.withdraw(totalPrice, user.getWallet());
         Transaction transaction = new Transaction(totalPrice, explains);
         transaction.setUser(user);
+        transaction.setBoughtProducts(boughtProduct);
         return transactionService.save(transaction);
     }
 }

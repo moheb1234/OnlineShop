@@ -1,9 +1,11 @@
 package com.example.onlineshop.contoller;
 
 import com.example.onlineshop.model.Cart;
+import com.example.onlineshop.model.Transaction;
 import com.example.onlineshop.model.User;
 import com.example.onlineshop.security.LoginResponse;
 import com.example.onlineshop.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +13,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.MediaSize;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
-    public UserController(UserService userService, AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-    }
 
     @GetMapping("user/all")
     public ResponseEntity<List<User>> findAll() {
@@ -30,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("user/")
-    public ResponseEntity<User> findByPhoneNumber(@RequestParam String email) {
+    public ResponseEntity<User> findByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
 
@@ -39,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getCart(user));
     }
 
-    @PostMapping(value = "signup" ,consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> signup(@RequestBody User user) {
         return new ResponseEntity<>(userService.signup(user), HttpStatus.CREATED);
     }
@@ -57,5 +55,10 @@ public class UserController {
     @DeleteMapping("user/delete/{id}")
     public ResponseEntity<User> delete(@PathVariable long id) {
         return ResponseEntity.ok(userService.delete(id));
+    }
+
+    @GetMapping("user/transactions")
+    public ResponseEntity<List<Transaction>> transactions(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(userService.getAllTransactions(user));
     }
 }

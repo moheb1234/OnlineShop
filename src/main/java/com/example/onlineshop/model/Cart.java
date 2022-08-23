@@ -1,7 +1,8 @@
 package com.example.onlineshop.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -10,7 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "CART", schema = "shop")
 public class Cart {
@@ -24,31 +26,31 @@ public class Cart {
 
     @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
-    private Set<ProductItem> products = new HashSet<>();
+    private Set<ProductItem> productItems = new HashSet<>();
 
     @UpdateTimestamp
     private Date lastModifiedAt;
 
     public int totalPrice() {
         int total = 0;
-        for (ProductItem product : products) {
-            total+=product.getNumber();
+        for (ProductItem product : productItems) {
+            total+=product.getProduct().getPrice()*product.getNumber();
         }
         return total;
     }
 
     public void addProduct(Product product) {
-        for (ProductItem productItem : products) {
+        for (ProductItem productItem : productItems) {
             if (productItem.getProduct().getId()==product.getId()){
                 productItem.setNumber(productItem.getNumber()+1);
                 return;
             }
         }
-        products.add(new ProductItem(product,this,1));
+        productItems.add(new ProductItem(product,this,1));
     }
 
     public boolean removeProduct(Product product) {
-        for (ProductItem productItem : products) {
+        for (ProductItem productItem : productItems) {
             if (productItem.getProduct().getId()==product.getId()){
                 productItem.setNumber(productItem.getNumber()-1);
                 return true;
@@ -58,6 +60,6 @@ public class Cart {
     }
 
     public List<Product> nonExistProducts() {
-        return products.stream().map(ProductItem::getProduct).filter(product -> product.getInventory() == 0).toList();
+        return productItems.stream().map(ProductItem::getProduct).filter(product -> product.getInventory() == 0).toList();
     }
 }

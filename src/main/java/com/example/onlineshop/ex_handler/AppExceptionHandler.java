@@ -21,7 +21,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(DuplicateRequestException.class)
     public ResponseEntity<Object> DuplicateRequestExceptionHandler(DuplicateRequestException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -31,12 +31,12 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(PSQLException.class)
     public ResponseEntity<Object> PSQLExceptionHandler(PSQLException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> ValidationExceptionHandler(ValidationException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
 }
