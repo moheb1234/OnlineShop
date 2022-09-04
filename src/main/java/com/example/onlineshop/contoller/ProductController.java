@@ -16,26 +16,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("products/by-name{productName}")
-    public ResponseEntity<List<Product>> findAllByName(@PathVariable String productName) {
-        return ResponseEntity.ok(productService.findAllByName(productName));
-    }
-
-    @GetMapping("products/by-categories/{productCategories}")
-    public ResponseEntity<List<Product>> findAllByCategories(@PathVariable String productCategories) {
-        return ResponseEntity.ok(productService.finAllByCategories(productCategories));
-    }
-
-    @GetMapping("products/all/cheapest-sort")
-    public ResponseEntity<List<Product>> findAllByCheapest() {
-        return ResponseEntity.ok(productService.findAllByCheapest());
-    }
-
-    @GetMapping("products/all/expensive-sort")
-    public ResponseEntity<List<Product>> findAllByExpensive() {
-        return ResponseEntity.ok(productService.findAllByExpensive());
-    }
-
     @GetMapping("products/all")
     public ResponseEntity<List<Product>> findAll() {
         return ResponseEntity.ok(productService.findAll());

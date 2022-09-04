@@ -1,6 +1,5 @@
 package com.example.onlineshop.service;
 
-import com.example.onlineshop.enums.ProductCategories;
 import com.example.onlineshop.model.Product;
 import com.example.onlineshop.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -23,22 +22,6 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new InstanceNotFoundException(productNotFound(id)));
     }
 
-    public List<Product> findAllByName(String productName) {
-        return productRepository.findAllByName(productName);
-    }
-
-    public List<Product> finAllByCategories(String productCategories) {
-        return productRepository.findAllByProductCategories(ProductCategories.valueOf(productCategories.toUpperCase()));
-    }
-
-    public List<Product> findAllByCheapest() {
-        return productRepository.findAllByOrderByPrice();
-    }
-
-    public List<Product> findAllByExpensive() {
-        return productRepository.findAllByOrderByPriceDesc();
-    }
-
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -47,6 +30,7 @@ public class ProductService {
         product.setInventory(1);
         return save(product);
     }
+
     public Product save(Product product) {
         return productRepository.save(product);
     }

@@ -1,17 +1,14 @@
 package com.example.onlineshop.repository;
 
-import com.example.onlineshop.enums.ProductCategories;
 import com.example.onlineshop.model.Product;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findAllByName(String name);
 
-    List<Product> findAllByProductCategories(ProductCategories productCategories);
-
-    List<Product> findAllByOrderByPrice();
-
-    List<Product> findAllByOrderByPriceDesc();
+    @Query("select p from Product p where (?1 ='' or p.productCategories = ?1) and (?2='' or p.name like ?2%) and (p.inventory >= ?3)")
+    List<Product> filtersAll(String productCategories, String name, int inventory, Sort sort);
 }
