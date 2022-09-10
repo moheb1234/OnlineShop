@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User signup(User user) {
+    public String signup(User user) {
         Role role = roleService.findByName(RoleName.USER.toString());
         Set<Role> roles = new HashSet<>();
         roles.add(role);
@@ -85,7 +85,8 @@ public class UserService implements UserDetailsService {
         user.getWallet().setUser(user);
         emailService.setUserService(this);
         emailService.sendVerifyingEmil(user);
-        return userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user);
+        return "signup done successfully we sent a 6 digit code for your email please verify";
     }
 
     public String verifyingCode(String verifyingCode) {

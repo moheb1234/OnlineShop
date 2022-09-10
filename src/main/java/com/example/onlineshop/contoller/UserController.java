@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("user/")
+    @GetMapping("user/find-by-email")
     public ResponseEntity<User> findByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
@@ -37,8 +37,8 @@ public class UserController {
         return ResponseEntity.ok(userService.getCart(user));
     }
 
-    @PostMapping(value = "signup", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> signup(@RequestBody User user) {
+    @PostMapping(value = "signup")
+    public ResponseEntity<String> signup(@RequestBody User user) {
         return new ResponseEntity<>(userService.signup(user), HttpStatus.CREATED);
     }
 
