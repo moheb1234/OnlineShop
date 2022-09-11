@@ -84,8 +84,8 @@ public class UserService implements UserDetailsService {
         user.getFavorite().setUser(user);
         user.getWallet().setUser(user);
         emailService.setUserService(this);
-        emailService.sendVerifyingEmil(user);
         userRepository.saveAndFlush(user);
+        emailService.sendVerifyingEmil(user);
         return "signup done successfully we sent a 6 digit code for your email please verify";
     }
 

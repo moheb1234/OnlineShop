@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.management.InstanceNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
-
+import java.util.Set;
 
 @ControllerAdvice
 public class AppExceptionHandler {
@@ -31,12 +33,17 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(PSQLException.class)
     public ResponseEntity<Object> PSQLExceptionHandler(PSQLException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Object> ValidationExceptionHandler(ValidationException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> ValidationExceptionHandler(ConstraintViolationException e){
+        StringBuilder message = new StringBuilder();
+        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+        for (ConstraintViolation<?> violation : violations) {
+            message.append(violation.getMessage().concat(";"));
+        }
+        return new ResponseEntity<>(message.toString(), HttpStatus.BAD_REQUEST);
     }
 
 }

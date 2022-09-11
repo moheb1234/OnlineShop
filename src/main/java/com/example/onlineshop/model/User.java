@@ -1,8 +1,5 @@
 package com.example.onlineshop.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +15,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
+
 @Getter
 @Setter
 @Entity
@@ -27,17 +26,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Pattern(regexp = "[a-zA-Z_0-9]{5,20}")
+    @Pattern(regexp = "[a-zA-Z\\d]{5,20}", message = NOT_VALID_USERNAME)
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",message = NOT_VALID_PASSWORD)
     private String password;
 
-    @Pattern(regexp = "[a-zA-Z]{3,10}")
+    @Pattern(regexp = "[a-zA-Z]{3,10}",message = NOT_VALID_FIRSTNAME)
     private String firstname;
 
-    @Pattern(regexp = "[a-zA-Z]{3,10}")
+    @Pattern(regexp = "[a-zA-Z]{3,10}",message = NOT_VALID_LASTNAME)
     private String lastname;
 
     @Email
@@ -64,21 +63,17 @@ public class User implements UserDetails {
     @UpdateTimestamp
     private Date lastModifiedAt;
 
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Cart cart = new Cart();
-
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Wallet wallet = new Wallet(0);
 
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
     private Favorite favorite = new Favorite();
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
