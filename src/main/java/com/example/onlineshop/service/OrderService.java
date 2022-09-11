@@ -17,11 +17,12 @@ import static com.example.onlineshop.ex_handler.ExceptionMessage.NOT_ENOUGH_BALA
 @AllArgsConstructor
 public class OrderService {
 
-    private final ProductService productService;
     private final CartService cartService;
     private final WalletService walletService;
 
     private final TransactionService transactionService;
+
+    private final InventoryService inventoryService;
 
     public Transaction order(User user, String explains) {
         Cart userCart = user.getCart();
@@ -33,7 +34,7 @@ public class OrderService {
             throw new IllegalArgumentException(EMPTY_CART);
         if (totalPrice > user.getWallet().getBalance())
             throw new IllegalArgumentException(NOT_ENOUGH_BALANCE);
-        productService.ReduceInventory(userCart.getProductItems().stream().map(ProductItem::getProduct).collect(Collectors.toCollection(LinkedHashSet::new)));
+        inventoryService.ReduceInventory(userCart.getProductItems());
         Set<ProductItem> boughtProduct = new HashSet<>(userCart.getProductItems());
         cartService.clear(userCart);
         walletService.withdraw(totalPrice, user.getWallet());

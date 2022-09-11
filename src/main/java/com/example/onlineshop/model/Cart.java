@@ -60,6 +60,6 @@ public class Cart {
     }
 
     public List<Product> nonExistProducts() {
-        return productItems.stream().map(ProductItem::getProduct).filter(product -> product.getInventory() == 0).toList();
+        return productItems.stream().map(ProductItem::getProduct).filter(product -> product.getInventory().getNumber() == 0).toList();
     }
 }
