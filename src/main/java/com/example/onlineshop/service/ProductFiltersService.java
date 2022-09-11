@@ -1,6 +1,5 @@
 package com.example.onlineshop.service;
 
-import com.example.onlineshop.dto.ProductFilterRequest;
 import com.example.onlineshop.model.Product;
 import com.example.onlineshop.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -14,17 +13,17 @@ import java.util.List;
 public class ProductFiltersService {
     private final ProductRepository productRepository;
 
-    public List<Product> filters(ProductFilterRequest request) {
+    public List<Product> filters(String productName, String productCategories, String sortBy, int inventory) {
         Sort sort;
-        switch (request.getSortBy()) {
+        switch (sortBy) {
             case "Expensive" -> sort = Sort.by(Sort.Direction.DESC, "price");
             case "Cheapest" -> sort = Sort.by(Sort.Direction.ASC, "price");
             case "Newest" -> sort = Sort.by(Sort.Direction.DESC, "createdAt");
             default -> sort = null;
         }
-        return productRepository.filtersAll(request.getProductCategories().toUpperCase()
-                , request.getProductName()
-                , request.getInventory()
+        return productRepository.filtersAll(productCategories.toUpperCase()
+                , productName
+                , inventory
                 , sort);
     }
 }
