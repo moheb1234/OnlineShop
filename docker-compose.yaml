@@ -1,0 +1,18 @@
+version: '2.2'
+services:
+  app:
+    image: my-spring-app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postDB
+
+  postDB:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=moallem
+      - POSTGRES_USER=moheb
+      - POSTGRES_DB=shopDB
