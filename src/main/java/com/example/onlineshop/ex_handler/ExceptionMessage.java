@@ -11,6 +11,8 @@ public class ExceptionMessage {
     public static final String NOT_VALID_LASTNAME = "Lastname length should be between 3,10 and not contains " +
             " number or special character";
 
+    public static final String NOT_VALID_NUMBER = "Number must be bigger than zero";
+    public static final String NOT_VALID_PRICE = "Price must be bigger than zero";
     //other message
 
     public static final String USER_NOT_ENABLES = "Need To Verifying Email";

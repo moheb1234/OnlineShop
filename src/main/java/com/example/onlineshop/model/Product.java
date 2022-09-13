@@ -2,6 +2,7 @@ package com.example.onlineshop.model;
 
 import com.example.onlineshop.enums.ProductCategories;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "PRODUCT", schema = "shop")
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class Product {
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn
-    private Inventory inventory=new Inventory();
+    private Inventory inventory = new Inventory();
 
     @Enumerated(EnumType.STRING)
     private ProductCategories productCategories;
@@ -43,4 +45,11 @@ public class Product {
 
     @UpdateTimestamp
     private Date lastModifiedAt;
+
+    public Product(String name, int price, String imageUrl, ProductCategories productCategories) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.productCategories = productCategories;
+    }
 }

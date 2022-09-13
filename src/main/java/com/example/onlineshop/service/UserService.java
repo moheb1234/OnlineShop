@@ -23,8 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.onlineshop.ex_handler.ExceptionMessage.notValidCode;
-import static com.example.onlineshop.ex_handler.ExceptionMessage.userNotFound;
+import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
 
 @Slf4j
 @Service
@@ -47,6 +46,9 @@ public class UserService implements UserDetailsService {
 
     public LoginResponse signing(String username, String password, AuthenticationManager authenticationManager) {
         UserDetails userDetails = loadUserByUsername(username);
+        if (!userDetails.isEnabled()){
+            throw new IllegalArgumentException(USER_NOT_ENABLES);
+        }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         String token = jwtUtils.generateJwtToken(userDetails);
         return new LoginResponse(token, userDetails.getAuthorities());

@@ -1,5 +1,6 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Inventory;
 import com.example.onlineshop.model.Product;
 import com.example.onlineshop.repository.ProductRepository;
@@ -8,6 +9,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import javax.management.InstanceNotFoundException;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.productNotFound;
@@ -28,9 +30,9 @@ public class ProductService {
     }
 
     public Product create(Product product) {
-         save(product);
-         product.getInventory().setProduct(product);
-         return save(product);
+        save(product);
+        product.getInventory().setProduct(product);
+        return save(product);
     }
 
     public Product save(Product product) {
@@ -43,6 +45,9 @@ public class ProductService {
     }
 
     public Integer updatePrice(long id, int price) {
+        if (price<=0){
+            throw new IllegalArgumentException(ExceptionMessage.NOT_VALID_PRICE);
+        }
         Product product = findById(id);
         product.setPrice(price);
         save(product);

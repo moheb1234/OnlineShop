@@ -1,5 +1,6 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Inventory;
 import com.example.onlineshop.model.Product;
 import com.example.onlineshop.model.ProductItem;
@@ -15,7 +16,10 @@ import java.util.Set;
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    public Integer increaseInventory(Inventory inventory, @Min(1) int number) {
+    public Integer increaseInventory(Inventory inventory, int number) {
+        if (number<=0){
+            throw new IllegalArgumentException(ExceptionMessage.NOT_VALID_NUMBER);
+        }
         int increaseNumber = inventory.getNumber() + number;
         inventory.setNumber(increaseNumber);
         inventoryRepository.save(inventory);
