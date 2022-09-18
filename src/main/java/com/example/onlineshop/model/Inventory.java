@@ -31,4 +31,8 @@ public class Inventory {
     public Inventory() {
         number = 1;
     }
+
+    public Inventory(int number) {
+        this.number = number;
+    }
 }

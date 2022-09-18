@@ -3,16 +3,15 @@ package com.example.onlineshop.service;
 import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.*;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.EMPTY_CART;
 import static com.example.onlineshop.ex_handler.ExceptionMessage.NOT_ENOUGH_BALANCE;
 
-@Slf4j
 @Service
 @AllArgsConstructor
 public class OrderService {
