@@ -45,13 +45,13 @@ public class UserService implements UserDetailsService {
     }
 
     public LoginResponse signing(String username, String password, AuthenticationManager authenticationManager) {
-        UserDetails userDetails = loadUserByUsername(username);
-        if (!userDetails.isEnabled()){
+        User user = (User) loadUserByUsername(username);
+        if (!user.isEnabled()) {
             throw new IllegalArgumentException(USER_NOT_ENABLES);
         }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        String token = jwtUtils.generateJwtToken(userDetails);
-        return new LoginResponse(token, userDetails.getAuthorities());
+        String token = jwtUtils.generateJwtToken(user);
+        return new LoginResponse(token, user.getFirstname(), user.getLastname(),  user.getAuthorities());
     }
 
     @SneakyThrows
@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
         emailService.setUserService(this);
         userRepository.saveAndFlush(user);
         emailService.sendVerifyingEmil(user);
-        return "signup done successfully we sent a 6 digit code in "+ user.getEmail()+"  please verify";
+        return "signup done successfully we sent a 6 digit code in " + user.getEmail() + "  please verify";
     }
 
     public String verifyingCode(String verifyingCode) {

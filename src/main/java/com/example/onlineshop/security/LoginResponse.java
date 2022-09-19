@@ -1,18 +1,19 @@
 package com.example.onlineshop.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
 @Data
+@AllArgsConstructor
 public class LoginResponse {
     private String token;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private String firstname;
 
-    public LoginResponse(String token, Collection<? extends GrantedAuthority> authorities) {
-        this.token = token;
-        this.authorities = authorities;
-    }
+    private String lastname;
+
+    private Collection<? extends GrantedAuthority> authorities;
 }
