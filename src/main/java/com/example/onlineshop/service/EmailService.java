@@ -29,6 +29,18 @@ public class EmailService {
         javaMailSender.send(msg);
     }
 
+    public String resendVerifyingEmil(User user) {
+        int verifyingCode = (int) ((Math.random() * 900000) + 100000);
+        user.setVerifyingCode(verifyingCode + "");
+        userService.save(user);
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(user.getEmail());
+        msg.setSubject("verifying emile");
+        msg.setText("verifying code: \n" + user.getVerifyingCode());
+        javaMailSender.send(msg);
+        return "we resend verifying code to "+user.getEmail()+" ";
+    }
+
     public String sendForgottenPasswordEmail(String email) {
         User user = userService.findByEmail(email);
         if (user.isEnabled()) {
