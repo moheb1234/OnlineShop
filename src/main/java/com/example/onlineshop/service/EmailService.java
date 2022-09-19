@@ -29,8 +29,9 @@ public class EmailService {
         javaMailSender.send(msg);
     }
 
-    public String resendVerifyingEmil(User user) {
+    public String resendVerifyingEmil(String email) {
         int verifyingCode = (int) ((Math.random() * 900000) + 100000);
+        User user = userService.findByEmail(email);
         user.setVerifyingCode(verifyingCode + "");
         userService.save(user);
         SimpleMailMessage msg = new SimpleMailMessage();

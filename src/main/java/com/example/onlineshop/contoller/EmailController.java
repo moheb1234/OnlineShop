@@ -20,7 +20,7 @@ public class EmailController {
     }
 
     @PostMapping("email/resend-verifying-code")
-    public ResponseEntity<String> resendPasswordEmail(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(emailService.resendVerifyingEmil(user));
+    public ResponseEntity<String> resendPasswordEmail(@RequestParam String email){
+        return ResponseEntity.ok(emailService.resendVerifyingEmil(email));
     }
 }
