@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Deprecated
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final JwtTokenFilter jwtTokenFilter;
@@ -80,6 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public String[] permitAllAuthorizeHttp() {
-        return new String[]{"/products/**", "/signing", "/signup","/user/verifying","/email/forget-password","/email/resend-verifying-code"};
+        return new String[]{"/products/**", "/signing", "/signup","/user/verifying/**","/email/forget-password/**","/email/resend-verifying-code/**"};
     }
 }

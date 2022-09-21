@@ -1,6 +1,8 @@
 package com.example.onlineshop.service;
 
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,28 +12,19 @@ import javax.annotation.Resource;
 import static com.example.onlineshop.ex_handler.ExceptionMessage.USER_NOT_ENABLES;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
     @Resource
     private JavaMailSender javaMailSender;
 
-    private UserService userService;
+    private final UserService userService;
 
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public void sendVerifyingEmil(User user) {
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(user.getEmail());
-        msg.setSubject("verifying emile");
-        msg.setText("verifying code: \n" + user.getVerifyingCode());
-        javaMailSender.send(msg);
-    }
 
     public String resendVerifyingEmil(String email) {
-        int verifyingCode = (int) ((Math.random() * 900000) + 100000);
         User user = userService.findByEmail(email);
+        if (user.isEnabled()|| user.getVerifyingCode()==null)
+            throw new IllegalArgumentException(ExceptionMessage.EMAIL_VERIFIED);
+        int verifyingCode = (int) ((Math.random() * 900000) + 100000);
         user.setVerifyingCode(verifyingCode + "");
         userService.save(user);
         SimpleMailMessage msg = new SimpleMailMessage();

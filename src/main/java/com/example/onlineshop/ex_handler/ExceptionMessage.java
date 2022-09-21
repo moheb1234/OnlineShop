@@ -18,6 +18,7 @@ public class ExceptionMessage {
     public static final String USER_NOT_ENABLES = "Need To Verifying Email";
     public static final String EMPTY_CART = "Cart Cant Be Empty";
     public static final String NOT_ENOUGH_BALANCE = "Balance Is Not Enough";
+    public static final String EMAIL_VERIFIED = "Email has already been verified";
 
     public static String notValidAmount(int amount) {
         return "Amount: " + amount + " Is Not Valid";
