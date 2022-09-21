@@ -80,6 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     public String[] permitAllAuthorizeHttp() {
-        return new String[]{"/products/**", "/signing", "/signup","/user/verifying","/user/forget-password","/hello"};
+        return new String[]{"/products/**", "/signing", "/signup","/user/verifying","/email/forget-password","/email/resend-verifying-code"};
     }
 }
