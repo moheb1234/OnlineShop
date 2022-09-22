@@ -1,8 +1,9 @@
 version: '2.2'
 services:
   app:
-    image: my-spring-app
     build: .
+    image: app-shop-spring
+    container_name: spring-shop
     ports:
       - "8080:8080"
     depends_on:
