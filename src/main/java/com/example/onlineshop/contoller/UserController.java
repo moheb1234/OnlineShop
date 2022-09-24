@@ -7,9 +7,7 @@ import com.example.onlineshop.security.LoginResponse;
 import com.example.onlineshop.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-
 
     @GetMapping("user/all")
     public ResponseEntity<List<User>> findAll() {
@@ -49,7 +45,7 @@ public class UserController {
 
     @PostMapping("signing")
     public ResponseEntity<LoginResponse> signing(@RequestParam String username, @RequestParam String password) {
-        return ResponseEntity.ok(userService.signing(username, password, authenticationManager));
+        return ResponseEntity.ok(userService.signing(username, password));
     }
 
     @DeleteMapping("user/delete/{id}")
@@ -58,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("user/transactions")
-    public ResponseEntity<List<Transaction>> transactions(@AuthenticationPrincipal User user){
+    public ResponseEntity<List<Transaction>> transactions(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(userService.getAllTransactions(user));
     }
 }

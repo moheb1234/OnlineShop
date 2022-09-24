@@ -1,6 +1,7 @@
 package com.example.onlineshop.service;
 
 import com.example.onlineshop.enums.RoleName;
+import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.*;
 import com.example.onlineshop.repository.UserRepository;
 import com.example.onlineshop.security.LoginResponse;
@@ -44,12 +45,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new InstanceNotFoundException(userNotFound("username", username)));
     }
 
-    public LoginResponse signing(String username, String password, AuthenticationManager authenticationManager) {
+    public LoginResponse signing(String username, String password) {
         User user = (User) loadUserByUsername(username);
         if (!user.isEnabled()) {
             throw new IllegalArgumentException(USER_NOT_ENABLES);
         }
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException(ExceptionMessage.WRONG_PASSWORD);
+        }
         String token = jwtUtils.generateJwtToken(user);
         return new LoginResponse(token, user.getFirstname(), user.getLastname(), user.getAuthorities());
     }
