@@ -1,10 +1,7 @@
 package com.example.onlineshop.service;
 
 import com.example.onlineshop.enums.RoleName;
-import com.example.onlineshop.model.Cart;
-import com.example.onlineshop.model.Role;
-import com.example.onlineshop.model.Transaction;
-import com.example.onlineshop.model.User;
+import com.example.onlineshop.model.*;
 import com.example.onlineshop.repository.UserRepository;
 import com.example.onlineshop.security.LoginResponse;
 import com.example.onlineshop.security.jwt.JwtUtils;
@@ -22,9 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.management.InstanceNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
 
@@ -121,6 +117,11 @@ public class UserService implements UserDetailsService {
     }
 
     public Cart getCart(User user) {
+        Cart cart = user.getCart();
+        Set<ProductItem> sortedProductItem = cart.getProductItems().stream()
+                .sorted(Comparator.comparing(ProductItem::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        cart.setProductItems(sortedProductItem);
         return user.getCart();
     }
 
