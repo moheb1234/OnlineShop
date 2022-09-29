@@ -1,27 +1,27 @@
 package com.example.onlineshop.service;
 
 import com.example.onlineshop.enums.RoleName;
-import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Role;
 import com.example.onlineshop.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.management.InstanceNotFoundException;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.roleNotFound;
 
+@Validated
 @Service
+@RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
-
     @SneakyThrows
-    public Role findByName(String roleName) {
+    public Role findByName(@NotEmpty String roleName) {
         return roleRepository.findByName(RoleName.valueOf(roleName.toUpperCase()))
                 .orElseThrow(() -> new InstanceNotFoundException(roleNotFound(roleName)));
     }
@@ -34,7 +34,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role delete(String roleName) {
+    public Role delete(@NotEmpty String roleName) {
         Role role = findByName(roleName);
         roleRepository.delete(role);
         return role;

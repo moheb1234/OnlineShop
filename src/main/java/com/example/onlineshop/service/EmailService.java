@@ -6,11 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotEmpty;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.USER_NOT_ENABLES;
 
+@Validated
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -20,7 +23,7 @@ public class EmailService {
     private final UserService userService;
 
 
-    public String resendVerifyingEmil(String email) {
+    public String resendVerifyingEmil(@NotEmpty String email) {
         User user = userService.findByEmail(email);
         if (user.isEnabled()|| user.getVerifyingCode()==null)
             throw new IllegalArgumentException(ExceptionMessage.EMAIL_VERIFIED);
@@ -35,7 +38,7 @@ public class EmailService {
         return "we resend verifying code to "+user.getEmail()+" ";
     }
 
-    public String sendForgottenPasswordEmail(String email) {
+    public String sendForgottenPasswordEmail(@NotEmpty String email) {
         User user = userService.findByEmail(email);
         if (user.isEnabled()) {
             SimpleMailMessage msg = new SimpleMailMessage();

@@ -3,18 +3,15 @@ package com.example.onlineshop.service;
 import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.Wallet;
 import com.example.onlineshop.repository.WalletRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WalletService {
     private final WalletRepository walletRepository;
-
-    public WalletService(WalletRepository walletRepository) {
-        this.walletRepository = walletRepository;
-    }
-
 
     public List<Wallet> findAll() {
         return walletRepository.findAll();

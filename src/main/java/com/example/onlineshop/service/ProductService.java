@@ -9,7 +9,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import javax.management.InstanceNotFoundException;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.productNotFound;
@@ -45,7 +44,7 @@ public class ProductService {
     }
 
     public Integer updatePrice(long id, int price) {
-        if (price<=0){
+        if (price <= 0) {
             throw new IllegalArgumentException(ExceptionMessage.NOT_VALID_PRICE);
         }
         Product product = findById(id);

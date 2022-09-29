@@ -8,24 +8,23 @@ import com.example.onlineshop.security.LoginResponse;
 import com.example.onlineshop.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.Resource;
 import javax.management.InstanceNotFoundException;
+import javax.validation.constraints.NotEmpty;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.*;
 
-@Slf4j
+@Validated
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -45,7 +44,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new InstanceNotFoundException(userNotFound("username", username)));
     }
 
-    public LoginResponse signing(String username, String password) {
+    public LoginResponse signing(@NotEmpty String username, @NotEmpty String password) {
         User user = (User) loadUserByUsername(username);
         if (!user.isEnabled()) {
             throw new IllegalArgumentException(USER_NOT_ENABLES);
@@ -101,7 +100,7 @@ public class UserService implements UserDetailsService {
         javaMailSender.send(msg);
     }
 
-    public String verifyingCode(String verifyingCode) {
+    public String verifyingCode(@NotEmpty String verifyingCode) {
         User user = userRepository.findByVerifyingCode(verifyingCode);
         if (user == null || user.isEnabled()) {
             throw new IllegalArgumentException(notValidCode(verifyingCode));

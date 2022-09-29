@@ -5,14 +5,16 @@ import com.example.onlineshop.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.EMPTY_CART;
 import static com.example.onlineshop.ex_handler.ExceptionMessage.NOT_ENOUGH_BALANCE;
 
-@Slf4j
+@Validated
 @Service
 @AllArgsConstructor
 public class OrderService {
@@ -24,7 +26,7 @@ public class OrderService {
 
     private final InventoryService inventoryService;
 
-    public Transaction order(User user, String explains) {
+    public Transaction order(User user,@NotEmpty String explains) {
         Cart userCart = user.getCart();
         List<Product> nonExistProducts = userCart.nonExistProducts();
         if (nonExistProducts.size() != 0)
