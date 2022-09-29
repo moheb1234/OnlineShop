@@ -4,7 +4,7 @@ import com.example.onlineshop.enums.RoleName;
 import com.example.onlineshop.ex_handler.ExceptionMessage;
 import com.example.onlineshop.model.*;
 import com.example.onlineshop.repository.UserRepository;
-import com.example.onlineshop.security.LoginResponse;
+import com.example.onlineshop.dto.LoginResponse;
 import com.example.onlineshop.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

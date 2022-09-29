@@ -3,7 +3,7 @@ package com.example.onlineshop.contoller;
 import com.example.onlineshop.model.Cart;
 import com.example.onlineshop.model.Transaction;
 import com.example.onlineshop.model.User;
-import com.example.onlineshop.security.LoginResponse;
+import com.example.onlineshop.dto.LoginResponse;
 import com.example.onlineshop.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

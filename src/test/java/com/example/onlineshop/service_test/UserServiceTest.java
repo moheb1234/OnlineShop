@@ -2,7 +2,7 @@ package com.example.onlineshop.service_test;
 
 import com.example.onlineshop.model.User;
 import com.example.onlineshop.repository.UserRepository;
-import com.example.onlineshop.security.LoginResponse;
+import com.example.onlineshop.dto.LoginResponse;
 import com.example.onlineshop.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
