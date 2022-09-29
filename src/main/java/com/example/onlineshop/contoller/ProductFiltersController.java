@@ -1,5 +1,6 @@
 package com.example.onlineshop.contoller;
 
+import com.example.onlineshop.dto.ProductResponse;
 import com.example.onlineshop.model.Product;
 import com.example.onlineshop.service.ProductFiltersService;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ public class ProductFiltersController {
     private final ProductFiltersService productFiltersService;
 
     @GetMapping("products/filters")
-    public List<Product> filters(@RequestParam String productName
+    public List<ProductResponse> filters(@RequestParam String productName
             , @RequestParam String productCategories
             , @RequestParam String sortBy
             , @RequestParam int inventory) {
