@@ -1,5 +1,6 @@
 package com.example.onlineshop.contoller;
 
+import com.example.onlineshop.dto.CartDTO;
 import com.example.onlineshop.model.Cart;
 import com.example.onlineshop.model.Transaction;
 import com.example.onlineshop.model.User;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("user/cart")
-    public ResponseEntity<Cart> getCart(@AuthenticationPrincipal User user) {
+    public ResponseEntity<CartDTO> getCart(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(userService.getCart(user));
     }
 
