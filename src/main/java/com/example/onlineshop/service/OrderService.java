@@ -8,13 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.example.onlineshop.ex_handler.ExceptionMessage.EMPTY_CART;
 import static com.example.onlineshop.ex_handler.ExceptionMessage.NOT_ENOUGH_BALANCE;
 
 @Validated
+@Slf4j
 @Service
 @AllArgsConstructor
 public class OrderService {
@@ -26,11 +28,13 @@ public class OrderService {
 
     private final InventoryService inventoryService;
 
-    public Transaction order(User user,@NotEmpty String explains) {
+    public Transaction order(User user, @NotEmpty String explains) {
         Cart userCart = user.getCart();
         List<Product> nonExistProducts = userCart.nonExistProducts();
-        if (nonExistProducts.size() != 0)
+        if (nonExistProducts.size() != 0) {
+            log.warn("1");
             throw new IllegalArgumentException(ExceptionMessage.productNotFound(nonExistProducts.get(0).getId()));
+        }
         int totalPrice = userCart.totalPrice();
         if (totalPrice == 0)
             throw new IllegalArgumentException(EMPTY_CART);

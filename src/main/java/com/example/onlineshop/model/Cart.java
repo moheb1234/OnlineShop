@@ -49,14 +49,14 @@ public class Cart {
         productItems.add(new ProductItem(product,this,1));
     }
 
-    public boolean removeProduct(Product product) {
+    public ProductItem removeProduct(Product product) {
         for (ProductItem productItem : productItems) {
             if (productItem.getProduct().getId()==product.getId()){
                 productItem.setNumber(productItem.getNumber()-1);
-                return true;
+                return productItem;
             }
         }
-        return false;
+        return null;
     }
 
     public List<Product> nonExistProducts() {

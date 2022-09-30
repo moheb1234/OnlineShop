@@ -54,9 +54,14 @@ public class CartService {
     @SneakyThrows
     public Cart removeProduct(Cart cart, long productID) {
         Product product = productService.findById(productID);
-        if (cart.removeProduct(product)) {
-            return save(cart);
+        ProductItem productItem = cart.removeProduct(product);
+        if (productItem == null)
+            throw new InstanceNotFoundException(productNotFound(productID));
+        if (productItem.getNumber()==0){
+            cart.getProductItems().remove(productItem);
+            save(cart);
+            productItemRepository.delete(productItem);
         }
-        throw new InstanceNotFoundException(productNotFound(productID));
+        return cart;
     }
 }
